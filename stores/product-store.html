@@ -1,6 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/funk/funk.html">
-<link rel="import" href="../actions/index.html">
+<link rel="import" href="../api/shop.html">
 
 <script>
 Polymer({
@@ -38,8 +38,10 @@ Polymer({
 
     },
 
-    // This store can listen to any of our actions
-    funkListenables: Actions,
+    ready: function() {
+        document.addEventListener('add-to-cart', this.onAddToCart.bind(this));
+        Shop.getProducts(this.onGetProductsCompleted.bind(this));
+    },
 
     // getProducts.completed action subscriber
     onGetProductsCompleted: function(products) {
@@ -51,12 +53,12 @@ Polymer({
     },
 
     // addToCart action subscriber
-    onAddToCart: function(productId) {
+    onAddToCart: function(e) {
 
-        var product = this.get(['all', productId]);
+        var product = this.get(['all', e.detail.productId]);
         var inventory = product.inventory > 0 ? product.inventory - 1 : 0;
 
-        this.set(['all', productId, 'inventory'], inventory);
+        this.set(['all', e.detail.productId, 'inventory'], inventory);
     }
 
 });

@@ -1,5 +1,4 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/funk/funk.html">
 <link rel="import" href="../css/ui-kit-styles.min.html">
 <link rel="import" href="product-item.html">
 
@@ -9,9 +8,9 @@
             :host { display: block; }
         </style>
         <div>
-            <h2 class="uk-h2">Flux Shop Demo (Polymer/Funk/Reflux)</h2>
+            <h2 class="uk-h2">Flux Shop Demo (Polymer/Faux Flux)</h2>
             <div>
-                <template is="dom-repeat" items="[[state.products.list]]" as="product">
+                <template is="dom-repeat" items="[[products]]" as="product">
                     <product-item product="[[product]]"></product-item>
                 </template>
             </div>
@@ -24,9 +23,9 @@ Polymer({
 
     is: 'product-list',
 
-    behaviors: [
-        Funk.ViewBehavior
-    ]
+    properties: {
+        products: Array
+    }
 
 });
 </script>

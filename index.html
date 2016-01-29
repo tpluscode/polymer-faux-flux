@@ -7,7 +7,6 @@
 
         <!-- HTML imports used directly in this file -->
         <link rel="import" href="css/ui-kit-styles.min.html">
-        <link rel="import" href="actions/index.html">
         <link rel="import" href="views/product-list.html">
         <link rel="import" href="views/shopping-cart.html">
         <link rel="import" href="stores/cart-store.html">
@@ -30,22 +29,16 @@
     </head>
     <body>
 
+    <!-- Make data binding possible without a Polymer element -->
+    <template is="dom-bind">
         <!-- Declare state stores -->
-        <cart-store></cart-store>
-        <product-store></product-store>
+        <cart-store products="[[allProducts]]" items="{{cart}}" total="{{total}}"></cart-store>
+        <product-store list="{{products}}" all="{{allProducts}}"></product-store>
 
-        <!-- Display views -->
-        <product-list></product-list>
-        <shopping-cart></shopping-cart>
-
-        <script>
-            // Wait for components to upgrade...
-            document.addEventListener('WebComponentsReady', function(e) {
-
-                // ... then fetch all products!
-                Actions.getProducts()
-            });
-        </script>
+        <!-- Display views and bind to stores -->
+        <product-list products="[[products]]"></product-list>
+        <shopping-cart cart-items="[[cart]]" cart-total="[[total]]"></shopping-cart>
+    </template>
 
     </body>
 </html>

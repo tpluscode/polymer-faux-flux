@@ -1,16 +1,8 @@
 <link rel="import" href="../bower_components/polymer/polymer.html">
-<link rel="import" href="../bower_components/funk/funk.html">
-<link rel="import" href="../actions/index.html">
-
 <script>
 Polymer({
 
     is: 'cart-store',
-
-    // Tie this component into the Polymer app as a Reflux store
-    behaviors: [
-        Funk.StoreBehavior
-    ],
 
     properties: {
 
@@ -35,6 +27,11 @@ Polymer({
             notify: true
         },
 
+        products: {
+            type: Object,
+            value: {}
+        },
+
         _itemsIndices: {
             type: Object,
             value: function () {
@@ -44,19 +41,23 @@ Polymer({
 
     },
 
-    // This store can listen to any of our actions
-    funkListenables: Actions,
+    ready: function() {
+        document.addEventListener('add-to-cart', this.onAddToCart.bind(this));
+        document.addEventListener('checkout-cart', function(e) {
+            Shop.buyProducts(e.detail.items, this.onCartCheckoutCompleted.bind(this));
+        }.bind(this));
+    },
 
     // addToCart action subscriber
-    onAddToCart: function (productId) {
+    onAddToCart: function (e) {
 
-        var product = this.state.products.all[productId];
+        var product = this.products[e.detail.productId];
 
         if (!product) {
             return;
         }
 
-        var index = this._itemsIndices[productId];
+        var index = this._itemsIndices[e.detail.productId];
 
         if (typeof index !== 'undefined') {
             var item = this.items[index];
@@ -64,13 +65,13 @@ Polymer({
         } else {
 
             this.push('items', {
-                id: productId,
+                id: e.detail.productId,
                 title: product.title,
                 quantity: 1,
                 price: product.price
             });
 
-            this._itemsIndices[productId] = this.items.length - 1;
+            this._itemsIndices[e.detail.productId] = this.items.length - 1;
         };
     },
 
